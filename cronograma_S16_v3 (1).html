@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CD1100 · Sección 16 · Otoño 2026</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background: #f5f4f0; color: #1a1a18; padding: 1.5rem 1rem 3rem; }
+.card { max-width: 960px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 1.5rem 2rem 2.5rem; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.horarios { display: flex; gap: 8px; flex-wrap: wrap; margin: .5rem 0 .8rem; }
+.hp { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 1px solid #ddd; background: #fafaf8; }
+.hp-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink:0; }
+.disclaimer { font-size: 11.5px; color: #999; background: #f5f4f0; border-left: 3px solid #ddd; border-radius: 0 5px 5px 0; padding: 6px 10px; margin-bottom: 1rem; }
+
+/* COMPACT SUMMARY BAR */
+.summary-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; align-items: stretch; }
+.sum-box { flex: 1; min-width: 140px; border-radius: 8px; padding: 8px 12px; border: 1px solid; display: flex; flex-direction: column; gap: 2px; }
+.sum-box.prox-clase   { background: #eef4fd; border-color: #c5d9f5; }
+.sum-box.prox-entrega { background: #fdf3e0; border-color: #f5d9a0; }
+.sum-box.hito1 { background: #FAE8E0; border-color: #f0c4aa; }
+.sum-box.hito2 { background: #FAE8E0; border-color: #f0c4aa; }
+.sum-box.hito3 { background: #FAE8E0; border-color: #f0c4aa; }
+.sum-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.sum-box.prox-clase   .sum-label { color: #185FA5; }
+.sum-box.prox-entrega .sum-label { color: #854F0B; }
+.sum-box.hito1 .sum-label, .sum-box.hito2 .sum-label, .sum-box.hito3 .sum-label { color: #993C1D; }
+.sum-main  { font-size: 12px; font-weight: 600; color: #1a1a18; line-height: 1.3; }
+.sum-sub   { font-size: 10.5px; color: #888; }
+.sum-days  { display: inline-block; margin-top: 3px; font-size: 10.5px; font-weight: 700; padding: 1px 7px; border-radius: 8px; width: fit-content; }
+.sum-box.prox-clase   .sum-days { background: #d0e4f8; color: #0C447C; }
+.sum-box.prox-entrega .sum-days { background: #fae8b8; color: #633806; }
+.sum-box.hito1 .sum-days, .sum-box.hito2 .sum-days, .sum-box.hito3 .sum-days { background: #f5c4a0; color: #6B2A0E; }
+.sum-days.past { background: #d8ead8 !important; color: #2a5a2a !important; }
+
+/* CONTROLS ROW */
+.controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: .9rem; }
+.filter-btn { font-size: 12px; padding: 4px 11px; border-radius: 20px; border: 1px solid #ccc; background: #fff; color: #555; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.filter-btn.active { background: #1a1a18; color: #fff; border-color: #1a1a18; }
+.sep { width: 1px; height: 22px; background: #ddd; margin: 0 2px; }
+.view-toggle { display: flex; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }
+.view-btn { font-size: 12px; padding: 4px 12px; border: none; background: #fff; color: #555; cursor: pointer; transition: all .15s; }
+.view-btn.active { background: #1a1a18; color: #fff; }
+
+/* LEGEND */
+.legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: .8rem; }
+.leg { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #666; }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink:0; }
+
+/* TABLE */
+#table-view table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { font-size: 10.5px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: .05em; padding: 6px 10px; text-align: left; border-bottom: 1px solid #eee; }
+td { padding: 8px 10px; border-bottom: 1px solid #f0efe8; vertical-align: middle; line-height: 1.5; }
+tr.row-lab td    { background: rgba(59,139,212,.05); }
+tr.row-cat td    { background: rgba(29,158,117,.04); }
+tr.row-hito td   { background: rgba(216,90,48,.08); border-left: 3px solid #D85A30; }
+tr.row-receso td { background: #f9f8f5; color: #bbb; font-style: italic; }
+.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+.badge-lab    { background: rgba(59,139,212,.15); color: #185FA5; }
+.badge-cat    { background: rgba(29,158,117,.15); color: #0F6E56; }
+.badge-hito   { background: rgba(216,90,48,.2);   color: #993C1D; }
+.badge-receso { background: #eee; color: #bbb; }
+.topic  { font-weight: 600; color: #1a1a18; }
+.hora   { font-size: 10.5px; color: #bbb; display: block; margin-top: 1px; }
+.date-col { white-space: nowrap; font-size: 12px; color: #555; }
+.tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; margin: 2px 2px 0 0; }
+.tag-presenta  { background: #eeecfd; color: #3C3489; }
+.tag-entrega   { background: #fdf3e0; color: #854F0B; }
+.tag-enunciado { background: #e8f5ef; color: #0F6E56; }
+.cal-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 8px; border: 1px solid #ddd; border-radius: 4px; background: #fff; color: #555; cursor: pointer; margin: 3px 3px 0 0; transition: background .15s; }
+.cal-btn:hover { background: #f5f4f0; }
+.days-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 8px; margin-left: 4px; background: #fae8b8; color: #633806; vertical-align: middle; }
+.days-badge.past { background: #d8ead8; color: #2a5a2a; }
+
+/* CALENDAR */
+#cal-view { display: none; }
+.months-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width:600px) { .months-grid { grid-template-columns: 1fr; } .summary-bar { flex-direction: column; } }
+.month-block {}
+.month-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #1a1a18; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.cal-dow  { font-size: 9.5px; font-weight: 700; text-align: center; color: #bbb; padding: 2px 0; text-transform: uppercase; }
+.cal-day  { min-height: 42px; border-radius: 5px; padding: 3px 3px 3px 4px; background: #fafaf8; border: 1px solid #eee; }
+.cal-day.empty   { background: transparent; border-color: transparent; }
+.cal-day.today   { border-color: #1a1a18; }
+.cal-day-num { font-size: 10.5px; font-weight: 600; color: #aaa; line-height: 1; }
+.cal-day.today .cal-day-num { color: #fff; background: #1a1a18; border-radius: 50%; width: 17px; height: 17px; display: flex; align-items: center; justify-content: center; }
+.cal-event { font-size: 9px; font-weight: 600; padding: 1px 3px; border-radius: 2px; margin-top: 2px; line-height: 1.3; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ev-lab    { background: rgba(59,139,212,.2);  color: #185FA5; }
+.ev-cat    { background: rgba(29,158,117,.2);  color: #0F6E56; }
+.ev-hito   { background: rgba(216,90,48,.28);  color: #993C1D; }
+.ev-receso { background: #eee; color: #aaa; }
+.ev-entrega{ background: #fae8b8; color: #633806; }
+.cal-legend { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.cal-leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #666; }
+.cal-leg-swatch { width: 10px; height: 8px; border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>CD1100 · Sección 16 · Otoño 2026</h1>
+  <div class="horarios">
+    <div class="hp"><div class="hp-dot" style="background:#3B8BD4"></div><strong>Laboratorio</strong> · lunes 12:45–14:15</div>
+    <div class="hp"><div class="hp-dot" style="background:#1D9E75"></div><strong>Cátedra</strong> · jueves 8:30–10:00</div>
+  </div>
+  <div class="disclaimer">⚠ Las fechas y contenidos son referenciales y podrían cambiar. Cualquier modificación se avisará con anticipación.</div>
+
+  <div class="summary-bar" id="summary-bar"></div>
+
+  <div class="controls">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Todo</button>
+    <button class="filter-btn" onclick="setFilter('lab',this)">Laboratorio</button>
+    <button class="filter-btn" onclick="setFilter('cat',this)">Cátedra</button>
+    <button class="filter-btn" onclick="setFilter('hito',this)">Hitos</button>
+    <button class="filter-btn" onclick="setFilter('tarea',this)">Tareas y entregas</button>
+    <div class="sep"></div>
+    <div class="view-toggle">
+      <button class="view-btn active" onclick="setView('table',this)">Tabla</button>
+      <button class="view-btn" onclick="setView('cal',this)">Calendario</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#3B8BD4"></div>Laboratorio</div>
+    <div class="leg"><div class="leg-dot" style="background:#1D9E75"></div>Cátedra</div>
+    <div class="leg"><div class="leg-dot" style="background:#D85A30"></div>Hito evaluado</div>
+    <div class="leg"><div class="leg-dot" style="background:#B4B2A9"></div>Sin clases</div>
+  </div>
+
+  <div id="table-view">
+    <table>
+      <thead><tr>
+        <th style="width:100px">Fecha</th>
+        <th style="width:44px">Sem.</th>
+        <th style="width:62px">Clase</th>
+        <th>Tema</th>
+        <th style="width:215px">Tareas / evaluaciones</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div id="cal-view"></div>
+</div>
+
+<script>
+/* ============================================================
+   DATOS DEL CRONOGRAMA — edita aquí
+   date      → texto visible de fecha ("Lun 9 mar")
+   jsDate    → fecha real: new Date(año, mes-1, día)
+   week      → semana (número o "S.M."/"R.A.")
+   type      → "lab" | "cat" | "hito" | "receso"
+   clase     → etiqueta del bloque ("Lab 1", "Cát 1"…)
+   hora      → horario del bloque
+   topic     → nombre del tema
+   tags      → [{t:"Se presenta/entrega", k:"enunciado/presenta/entrega", label:"…"}]
+   hito      → true solo en los tres hitos
+   hitoDateStr → "AAAAMMDD"
+   hitoTitle   → nombre en el evento de calendario
+   startT/endT → "HHMMSS"
+============================================================ */
+const rows = [
+  {date:"Lun 9 mar",  jsDate:new Date(2026,2,9),  week:1,     type:"lab",   clase:"Lab 1",  hora:"12:45–14:15", topic:"Introducción a la ingeniería e innovación",   tags:[{t:"Se presenta",k:"enunciado",label:"Enunciado Tarea 1"}]},
+  {date:"Jue 12 mar", jsDate:new Date(2026,2,12), week:1,     type:"cat",   clase:"Cát 1",  hora:"8:30–10:00",  topic:"Introducción a la ingeniería e innovación",   tags:[]},
+  {date:"Lun 16 mar", jsDate:new Date(2026,2,16), week:2,     type:"lab",   clase:"Lab 2",  hora:"12:45–14:15", topic:"Trabajo en equipo",                           tags:[{t:"Se entrega",k:"entrega",label:"Tarea 1 (dom 15 mar)"}]},
+  {date:"Jue 19 mar", jsDate:new Date(2026,2,19), week:2,     type:"cat",   clase:"Cát 2",  hora:"8:30–10:00",  topic:"Trabajo en equipo",                           tags:[{t:"Se presenta",k:"enunciado",label:"Enunciado Tarea 2"}]},
+  {date:"Lun 23 mar", jsDate:new Date(2026,2,23), week:3,     type:"lab",   clase:"Lab 3",  hora:"12:45–14:15", topic:"Observación y herramientas de observación",   tags:[{t:"Se entrega",k:"entrega",label:"Tarea 2 (dom 22 mar)"}]},
+  {date:"Jue 26 mar", jsDate:new Date(2026,2,26), week:3,     type:"cat",   clase:"Cát 3",  hora:"8:30–10:00",  topic:"Observación y herramientas de observación",   tags:[{t:"Se presenta",k:"enunciado",label:"Enunciado Tarea 3"}]},
+  {date:"Lun 30 mar", jsDate:new Date(2026,2,30), week:4,     type:"lab",   clase:"Lab 4",  hora:"12:45–14:15", topic:"Presentaciones y comunicación oral",           tags:[{t:"Se presenta",k:"enunciado",label:"Enunciado Reporte Hito 1"}]},
+  {date:"Jue 2 abr",  jsDate:new Date(2026,3,2),  week:4,     type:"cat",   clase:"Cát 4",  hora:"8:30–10:00",  topic:"Presentaciones y comunicación oral",           tags:[]},
+  {date:"Lun 6 abr",  jsDate:new Date(2026,3,6),  week:"S.M.",type:"receso",clase:"—",      hora:"—",           topic:"Semana Mechona — sin clases",                 tags:[]},
+  {date:"Jue 9 abr",  jsDate:new Date(2026,3,9),  week:"S.M.",type:"receso",clase:"—",      hora:"—",           topic:"Semana Mechona — sin clases",                 tags:[]},
+  {date:"Lun 13 abr", jsDate:new Date(2026,3,13), week:5,     type:"lab",   clase:"Lab 5",  hora:"12:45–14:15", topic:"Feedback y retroalimentación",                tags:[{t:"Se entrega",k:"entrega",label:"Tarea 3 (dom 12 abr)"}]},
+  {date:"Jue 16 abr", jsDate:new Date(2026,3,16), week:5,     type:"hito",  clase:"Cát 5",  hora:"8:30–10:00",  topic:"Hito 1 — Presentación oral",
+   tags:[{t:"Se presenta",k:"presenta",label:"Hito 1 en clases"},{t:"Se entrega",k:"entrega",label:"Reporte Hito 1 (dom 19 abr)"}],
+   hito:true, hitoDateStr:"20260416", hitoTitle:"Hito 1 – CD1100 Sección 16", startT:"083000", endT:"100000"},
+  {date:"Lun 20 abr", jsDate:new Date(2026,3,20), week:6,     type:"lab",   clase:"Lab 6",  hora:"12:45–14:15", topic:"Definición del problema",                     tags:[]},
+  {date:"Jue 23 abr", jsDate:new Date(2026,3,23), week:6,     type:"cat",   clase:"Cát 6",  hora:"8:30–10:00",  topic:"Definición del problema",                     tags:[{t:"Se presenta",k:"enunciado",label:"Enunciado Tarea 4"}]},
+  {date:"Lun 27 abr", jsDate:new Date(2026,3,27), week:7,     type:"lab",   clase:"Lab 7",  hora:"12:45–14:15", topic:"Ética en proyectos de innovación",             tags:[]},
+  {date:"Jue 30 abr", jsDate:new Date(2026,3,30), week:7,     type:"cat",   clase:"Cát 7",  hora:"8:30–10:00",  topic:"Ética en proyectos de innovación",             tags:[]},
+  {date:"Lun 4 may",  jsDate:new Date(2026,4,4),  week:8,     type:"lab",   clase:"Lab 8",  hora:"12:45–14:15", topic:"Validación y reencuadre del problema",         tags:[]},
+  {date:"Jue 7 may",  jsDate:new Date(2026,4,7),  week:8,     type:"cat",   clase:"Cát 8",  hora:"8:30–10:00",  topic:"Validación y reencuadre del problema",         tags:[]},
+  {date:"Lun 11 may", jsDate:new Date(2026,4,11), week:9,     type:"lab",   clase:"Lab 9",  hora:"12:45–14:15", topic:"Propuesta conceptual",                         tags:[{t:"Se entrega",k:"entrega",label:"Tarea 4 (dom 10 may)"}]},
+  {date:"Jue 14 may", jsDate:new Date(2026,4,14), week:9,     type:"cat",   clase:"Cát 9",  hora:"8:30–10:00",  topic:"Propuesta conceptual",                         tags:[]},
+  {date:"Lun 18 may", jsDate:new Date(2026,4,18), week:"R.A.",type:"receso",clase:"—",      hora:"—",           topic:"Receso académico — sin clases",               tags:[]},
+  {date:"Jue 21 may", jsDate:new Date(2026,4,21), week:"R.A.",type:"receso",clase:"—",      hora:"—",           topic:"Receso académico — Día Glorias Navales",       tags:[]},
+  {date:"Lun 25 may", jsDate:new Date(2026,4,25), week:10,    type:"lab",   clase:"Lab 10", hora:"12:45–14:15", topic:"Ideación y propuesta conceptual",              tags:[]},
+  {date:"Jue 28 may", jsDate:new Date(2026,4,28), week:10,    type:"hito",  clase:"Cát 10", hora:"8:30–10:00",  topic:"Hito 2 — Presentación oral",
+   tags:[{t:"Se presenta",k:"presenta",label:"Hito 2 en clases"},{t:"Se entrega",k:"entrega",label:"Reporte Hito 2 (dom 31 may)"}],
+   hito:true, hitoDateStr:"20260528", hitoTitle:"Hito 2 – CD1100 Sección 16", startT:"083000", endT:"100000"},
+  {date:"Lun 1 jun",  jsDate:new Date(2026,5,1),  week:11,    type:"lab",   clase:"Lab 11", hora:"12:45–14:15", topic:"Ideación",                                     tags:[{t:"Se presenta",k:"enunciado",label:"Enunciado Tarea 5"}]},
+  {date:"Jue 4 jun",  jsDate:new Date(2026,5,4),  week:11,    type:"cat",   clase:"Cát 11", hora:"8:30–10:00",  topic:"Ideación",                                     tags:[]},
+  {date:"Lun 8 jun",  jsDate:new Date(2026,5,8),  week:12,    type:"lab",   clase:"Lab 12", hora:"12:45–14:15", topic:"Prototipado",                                  tags:[]},
+  {date:"Jue 11 jun", jsDate:new Date(2026,5,11), week:12,    type:"cat",   clase:"Cát 12", hora:"8:30–10:00",  topic:"Prototipado",                                  tags:[]},
+  {date:"Lun 15 jun", jsDate:new Date(2026,5,15), week:13,    type:"lab",   clase:"Lab 13", hora:"12:45–14:15", topic:"Preparando la Feria — Hito 3",                 tags:[]},
+  {date:"Jue 18 jun", jsDate:new Date(2026,5,18), week:13,    type:"cat",   clase:"Cát 13", hora:"8:30–10:00",  topic:"Preparando la Feria — Hito 3",                 tags:[]},
+  {date:"Lun 22 jun", jsDate:new Date(2026,5,22), week:14,    type:"hito",  clase:"Lab 14", hora:"12:45–14:15", topic:"Hito 3 — Feria de proyectos",
+   tags:[{t:"Se presenta",k:"presenta",label:"Hito 3 en clases"},{t:"Se entrega",k:"entrega",label:"Tarea 5 (dom 28 jun)"}],
+   hito:true, hitoDateStr:"20260622", hitoTitle:"Hito 3 – Feria Final CD1100 S16", startT:"124500", endT:"141500"},
+  {date:"Jue 25 jun", jsDate:new Date(2026,5,25), week:14,    type:"cat",   clase:"Cát 14", hora:"8:30–10:00",  topic:"Cierre del semestre",                          tags:[]},
+  {date:"Jue 2 jul",  jsDate:new Date(2026,6,2),  week:15,    type:"cat",   clase:"Cát 15", hora:"8:30–10:00",  topic:"Semana final (sin laboratorio)",               tags:[]},
+];
+
+const today = new Date(); today.setHours(0,0,0,0);
+function daysDiff(d) { const t=new Date(d); t.setHours(0,0,0,0); return Math.round((t-today)/86400000); }
+function daysLabel(d) {
+  const diff = daysDiff(d);
+  if (diff<0)  return {text:"Realizado", past:true};
+  if (diff===0) return {text:"¡Hoy!", past:false};
+  if (diff===1) return {text:"Mañana", past:false};
+  return {text:"En "+diff+" días", past:false};
+}
+
+// SUMMARY BAR
+function renderSummary() {
+  const nextClase   = rows.find(r=>r.type!=="receso" && daysDiff(r.jsDate)>=0);
+  const nextEntrega = rows.find(r=>r.tags&&r.tags.some(t=>t.k==="entrega")&&daysDiff(r.jsDate)>=0);
+  const hitos = rows.filter(r=>r.hito);
+  let html="";
+  if(nextClase){
+    const dl=daysLabel(nextClase.jsDate);
+    html+=`<div class="sum-box prox-clase">
+      <div class="sum-label">Próxima clase</div>
+      <div class="sum-main">${nextClase.clase} · ${nextClase.topic}</div>
+      <div class="sum-sub">${nextClase.date} · ${nextClase.hora}</div>
+      <span class="sum-days${dl.past?" past":""}">${dl.text}</span></div>`;
+  }
+  if(nextEntrega){
+    const et=nextEntrega.tags.find(t=>t.k==="entrega");
+    const dl=daysLabel(nextEntrega.jsDate);
+    html+=`<div class="sum-box prox-entrega">
+      <div class="sum-label">Próxima entrega</div>
+      <div class="sum-main">${et.label}</div>
+      <div class="sum-sub">Sem. ${nextEntrega.week} · ${nextEntrega.date}</div>
+      <span class="sum-days${dl.past?" past":""}">${dl.text}</span></div>`;
+  }
+  hitos.forEach((r,i)=>{
+    const dl=daysLabel(r.jsDate);
+    html+=`<div class="sum-box hito${i+1}">
+      <div class="sum-label">Hito ${i+1}</div>
+      <div class="sum-main">${r.date} · ${r.hora}</div>
+      <div class="sum-sub">${r.clase}</div>
+      <span class="sum-days${dl.past?" past":""}">${dl.text}</span></div>`;
+  });
+  document.getElementById("summary-bar").innerHTML=html;
+}
+
+// ICS with 3 reminders (1 week, 1 day, 1 hour before)
+function makeICS(r) {
+  const lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//CD1100//S16//ES",
+    "BEGIN:VEVENT",
+    "DTSTART;TZID=America/Santiago:"+r.hitoDateStr+"T"+r.startT,
+    "DTEND;TZID=America/Santiago:"+r.hitoDateStr+"T"+r.endT,
+    "SUMMARY:"+r.hitoTitle,
+    "DESCRIPTION:Evaluacion en clases - CD1100 Seccion 16",
+    "LOCATION:FCFM - Universidad de Chile",
+    // Reminder 1 week before
+    "BEGIN:VALARM","TRIGGER:-P7D","ACTION:DISPLAY","DESCRIPTION:En 1 semana: "+r.hitoTitle,"END:VALARM",
+    // Reminder 1 day before
+    "BEGIN:VALARM","TRIGGER:-P1D","ACTION:DISPLAY","DESCRIPTION:Mañana: "+r.hitoTitle,"END:VALARM",
+    // Reminder 1 hour before
+    "BEGIN:VALARM","TRIGGER:-PT1H","ACTION:DISPLAY","DESCRIPTION:En 1 hora: "+r.hitoTitle,"END:VALARM",
+    "END:VEVENT","END:VCALENDAR"];
+  const blob=new Blob([lines.join("\n")],{type:"text/calendar"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=r.hitoTitle.replace(/[^a-zA-Z0-9]/g,"_")+".ics"; a.click();
+}
+function gcLink(r) {
+  const url="https://calendar.google.com/calendar/render?action=TEMPLATE"
+    +"&dates="+r.hitoDateStr+"T"+r.startT+"/"+r.hitoDateStr+"T"+r.endT
+    +"&text="+encodeURIComponent(r.hitoTitle)
+    +"&details="+encodeURIComponent("Evaluación en clases · CD1100 Sección 16")
+    +"&location="+encodeURIComponent("FCFM – Universidad de Chile")
+    +"&ctz=America/Santiago";
+  window.open(url,"_blank");
+}
+
+// TABLE
+let currentFilter="all";
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderTable();
+}
+function tagHTML(tags){
+  return (tags||[]).map(t=>{
+    const cls=t.k==="enunciado"?"tag-enunciado":t.k==="presenta"?"tag-presenta":"tag-entrega";
+    return "<div><span class='tag "+cls+"'>"+t.t+"</span> "+t.label+"</div>";
+  }).join("");
+}
+function renderTable(){
+  const tb=document.getElementById("tbody"); tb.innerHTML="";
+  rows.forEach(r=>{
+    const hasTarea=r.tags&&r.tags.length>0;
+    const show=currentFilter==="all"
+      ||(currentFilter==="lab"  &&r.type==="lab")
+      ||(currentFilter==="cat"  &&r.type==="cat")
+      ||(currentFilter==="hito" &&r.type==="hito")
+      ||(currentFilter==="tarea"&&(hasTarea||r.type==="hito"));
+    if(!show)return;
+    const rowCls  =r.type==="hito"?"row-hito":r.type==="receso"?"row-receso":r.type==="lab"?"row-lab":"row-cat";
+    const badgeCls=r.type==="hito"?"badge-hito":r.type==="lab"?"badge-lab":r.type==="cat"?"badge-cat":"badge-receso";
+    let ev=tagHTML(r.tags);
+    if(r.hito){
+      const dl=daysLabel(r.jsDate);
+      ev+=`<span class="days-badge${dl.past?" past":""}">${dl.text}</span>`;
+      ev+=`<div style="margin-top:4px">
+        <button class="cal-btn" onclick='makeICS(${JSON.stringify(r).replace(/'/g,"&#39;")})'>📅 .ics (c/recordatorios)</button>
+        <button class="cal-btn" onclick='gcLink(${JSON.stringify(r).replace(/'/g,"&#39;")})'>🗓 Google Cal</button>
+      </div>`;
+    }
+    const tr=document.createElement("tr"); tr.className=rowCls;
+    tr.innerHTML=`<td class="date-col">${r.date}<span class="hora">${r.hora}</span></td>`
+      +`<td style="text-align:center;font-size:11.5px;color:#aaa">${r.week}</td>`
+      +`<td><span class="badge ${badgeCls}">${r.clase}</span></td>`
+      +`<td class="topic">${r.topic}</td>`
+      +`<td style="font-size:12px;line-height:1.8">${ev}</td>`;
+    document.getElementById("tbody").appendChild(tr);
+  });
+}
+
+// CALENDAR
+const MONTHS=["Marzo","Abril","Mayo","Junio","Julio"];
+const MONTH_NUMS=[2,3,4,5,6];
+function renderCalendar(){
+  const cv=document.getElementById("cal-view");
+  const ENTREGA_DATES={};
+  rows.forEach(r=>(r.tags||[]).forEach(t=>{
+    if(t.k==="entrega"){
+      const m=t.label.match(/dom (\d+) ([a-z]+)/);
+      if(m){
+        const months={ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6};
+        const key=2026+"-"+months[m[2]]+"-"+m[1];
+        ENTREGA_DATES[key]=(ENTREGA_DATES[key]||[]); ENTREGA_DATES[key].push(t.label);
+      }
+    }
+  }));
+  let html=`<div class="months-grid">`;
+  MONTH_NUMS.forEach((m,mi)=>{
+    const firstDay=new Date(2026,m,1).getDay();
+    const daysInMonth=new Date(2026,m+1,0).getDate();
+    const startOffset=(firstDay+6)%7;
+    html+=`<div class="month-block"><div class="month-title">${MONTHS[mi]} 2026</div><div class="cal-grid">`;
+    ["L","M","X","J","V","S","D"].forEach(d=>{ html+=`<div class="cal-dow">${d}</div>`; });
+    for(let i=0;i<startOffset;i++) html+=`<div class="cal-day empty"></div>`;
+    for(let day=1;day<=daysInMonth;day++){
+      const isToday=today.getFullYear()===2026&&today.getMonth()===m&&today.getDate()===day;
+      const dayRows=rows.filter(r=>{const d=r.jsDate;return d.getFullYear()===2026&&d.getMonth()===m&&d.getDate()===day;});
+      const entregas=ENTREGA_DATES["2026-"+m+"-"+day]||[];
+      html+=`<div class="cal-day${isToday?" today":""}"><div class="cal-day-num">${day}</div>`;
+      dayRows.forEach(r=>{
+        const cls=r.type==="hito"?"ev-hito":r.type==="lab"?"ev-lab":r.type==="cat"?"ev-cat":"ev-receso";
+        html+=`<div class="cal-event ${cls}">${r.clase}</div>`;
+      });
+      entregas.forEach(()=>{ html+=`<div class="cal-event ev-entrega">📤 Entrega</div>`; });
+      html+=`</div>`;
+    }
+    html+=`</div></div>`;
+  });
+  html+=`</div><div class="cal-legend">
+    <div class="cal-leg"><div class="cal-leg-swatch" style="background:rgba(59,139,212,.3)"></div>Laboratorio</div>
+    <div class="cal-leg"><div class="cal-leg-swatch" style="background:rgba(29,158,117,.3)"></div>Cátedra</div>
+    <div class="cal-leg"><div class="cal-leg-swatch" style="background:rgba(216,90,48,.35)"></div>Hito</div>
+    <div class="cal-leg"><div class="cal-leg-swatch" style="background:#fae8b8"></div>Entrega tarea</div>
+    <div class="cal-leg"><div class="cal-leg-swatch" style="background:#eee"></div>Sin clases</div>
+  </div>`;
+  cv.innerHTML=html;
+}
+
+function setView(v,btn){
+  document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("table-view").style.display=v==="table"?"block":"none";
+  document.getElementById("cal-view").style.display  =v==="cal"?"block":"none";
+  document.getElementById("filters").style.display   =v==="table"?"contents":"none";
+}
+
+renderSummary();
+renderTable();
+renderCalendar();
+</script>
+</body>
+</html>
